@@ -1,25 +1,13 @@
 import os
 import arcpy as ap
-import glob
+
 
 from gis_lib.helpers import * 
 
 # finds a date and creates local variables based on that date
 def local_config():
-    # Function to find monday's date
-    # looks at current folder finds all 
-    # files with text and looks at suffix 
-    # to find the greatest number YYMMDD
-    def local_date(text):
-        for file in glob.glob(text):
-            dates = []
-            dates.append(int(file[-10:-4]))
-        date = str(max(dates))
-        print(f'{text[:-1]} Date: {date}')
-        return date
-
-    # RUNS LOCAL Date finds monday's date
-    sched_date = local_date('METRO_PATTERNS*')
+    
+    sched_date = get_last_monday()  
 
     # gets AUTOMATION EXPORTS from .env file to get the Automation_Exports directory
     # this is where all of the exports are stored after processing the csv's

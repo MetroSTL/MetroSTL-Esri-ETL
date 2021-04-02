@@ -1,44 +1,44 @@
 SELECT
-    ls.Sequence || ',' ||
-    linesbystop.signid || ',' ||
-    s.stopid || ',' ||
-    '"' || s.stopabbr ||  '"' || ',' ||
-    '"' || s.stopname ||  '"' || ',' ||
-	'"' || s.onstreet ||  '"' || ',' ||
-    '"' || s.atstreet ||  '"' || ',' ||
-    '"' || s.stopposition ||  '"' || ',' ||
-    '"' || CASE WHEN S.PREFERRED = 1 THEN 'YES'
+    ls.Sequence as Seq,
+    linesbystop.signid as SignID,
+    s.stopid as StopID,
+    s.stopabbr as StopAbbr,
+    s.stopname as StopName,
+	s.onstreet as OnSt,
+    s.atstreet as AtSt,
+    s.stopposition as StopPos,
+    CASE WHEN S.PREFERRED = 1 THEN 'YES'
         WHEN S.PREFERRED = 0 THEN 'NO'
-        END ||  '"' || ',' ||
-    '"' || CASE WHEN s.bench = 1 THEN 'YES'
+        END as PrefTrans,
+    CASE WHEN s.bench = 1 THEN 'YES'
         WHEN s.bench = 0 and s.shelter =1
             THEN 'YES'
         WHEN s.bench = 0 and s.shelter = 0
             THEN 'NO'
-        END ||  '"' || ',' ||
-    '"' || CASE WHEN s.Shelter = 1 THEN 'YES'
+        END as Bench,
+    CASE WHEN s.Shelter = 1 THEN 'YES'
         WHEN s.shelter = 0 THEN 'NO'
-        END ||  '"' || ',' ||
-    '"' || CASE WHEN s.transfer = 1 THEN 'YES'
+        END as Shelter,
+    CASE WHEN s.transfer = 1 THEN 'YES'
         WHEN s.transfer = 0 THEN 'NO'
-        END ||  '"' || ',' ||
-    '"' || CASE WHEN s.userstring12 = 'A' THEN 'YES'
+        END as Transfer,
+    CASE WHEN s.userstring12 = 'A' THEN 'YES'
         WHEN s.userstring12 <> 'A' THEN 'NO'
-        END ||  '"' || ',' ||
-    '"' || CASE WHEN s.userlongstring1 = 'A' THEN 'YES'
+        END as ADA,
+    CASE WHEN s.userlongstring1 = 'A' THEN 'YES'
         WHEN s.userlongstring1 <> 'A' THEN 'NO'
-        END ||  '"' || ',' ||
-    '"' || CASE WHEN ls.nodeid > 0 THEN 'YES'
+        END as PubWay,
+    CASE WHEN ls.nodeid > 0 THEN 'YES'
         WHEN ls.nodeid = 0 THEN 'NO'
-        END ||  '"' || ',' ||
-    '"' || ML.LINENAME ||  '"' || ',' ||
-    '"' || ml.lineabbr ||  '"' || ',' ||
-	'"' || l.directionname ||  '"' || ',' ||
-    CAST(S.COUNTYCODE AS VARCHAR(30)) || ',' ||
-    '"' || S.CITY ||  '"' || ',' ||
-    s.gpslon / power(10,(length(abs(s.gpslon)))-2) || ',' ||
-    s.gpslat / power(10,(length(abs(s.gpslat)))-2) || ',' ||
-    sp.distance || ',' ||'' as LIST
+        END as Node,
+    ML.LINENAME as LineName,
+    ml.lineabbr as RouteCode,
+	l.directionname as Dir,
+    CAST(S.COUNTYCODE AS VARCHAR(30)) as CountyCode,
+    S.CITY as Juris,
+    s.gpslon / power(10,(length(abs(s.gpslon)))-2) as GPS_Lon,
+    s.gpslat / power(10,(length(abs(s.gpslat)))-2) as GPS_Lat,
+    sp.distance as Dist
 FROM linestop ls
 LEFT OUTER JOIN stops s ON s.stopid = ls.stopID
 INNER JOIN line l ON l.linedirid = ls.linedirid AND l.signid = ls.signid
@@ -112,7 +112,7 @@ GROUP BY
     CASE WHEN s.userlongstring1 = 'A' THEN 'YES'
         WHEN s.userlongstring1 <> 'A' THEN 'NO'
         END
-ORDER BY ml.lineabbr, l.directionname, ls.sequence;
+ORDER BY ml.lineabbr, l.directionname, ls.sequence
 
 
 

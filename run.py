@@ -9,6 +9,7 @@ from config import local_config, portal_config, config_options
 
 ##### HELPERS #####
 from gis_lib.helpers import * 
+from gis_lib.execute_sql import * 
 
 ##### LOCAL #####
 from gis_lib.routes import routesCreation, routeBuffers
@@ -27,6 +28,8 @@ def run():
     dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
     load_dotenv(dotenv_path)    # Function chaining all of the processing of feature classes into one 
     
+    create_csv_data()
+
     #  change Current Working directory for processing files
     os.chdir(os.environ['SQL_EXPORTS'])
 
@@ -37,26 +40,27 @@ def run():
     ap.env.workspace = os.path.join(local['Automation_Exports'], local['ds_gdb'])
     
     # get feature class names by feeding in date
-    feature_classes = features(local['sched_date'])
+    #feature_classes = features(local['sched_date'])
 
-    # build agol and enterprise profiles
-    agol_config = portal_config(feature_classes, 'agol')
-    enterprise_config = portal_config(feature_classes, 'enterprise')
+    # # build agol and enterprise profiles
+    # agol_config = portal_config(feature_classes, 'agol')
+    # enterprise_config = portal_config(feature_classes, 'enterprise')
     
-    # get the location of all of the csv's ---> to be depricated with airflow
-    csvs = csv_locs(local['sched_date'])
+    # get the location of all of the csv's ---> to be deprecated with airflow
+    # csvs = csv_locs(local['sched_date'])
 
     printList(csvs, "org_csv")
 
     # delete the working gdb if it has already been run this week
-    clearDataStore(local['Automation_Exports'], local['sched_date'])
+    #clearDataStore(local['Automation_Exports'], local['sched_date'])
 
     # add headers to dba csv exports
-    csv_dir = add_columns(local['Sql_Exports'], csvs, local['sched_date'])
+    #csv_dir = add_columns(local['Sql_Exports'], csvs, local['sched_date'])
     
     # define config object
     config = config_options(csvs, csv_dir, local)
 
+ 
     # run the model with all of the specified variable objects and profiles
 
     # function that finishes by updating the current gdb
@@ -66,7 +70,8 @@ def run():
         print('Start of Local GIS file Creation')
         print('-------------------------------------')
         print(' ')
-        # itterate through csvs to only run processes that have been updated
+        # iterate through csvs to only run processes that have been updated
+        # TODO: remove for and if logic, and simply run each function in sequence
         for file in csvs:
             if file['type'] == 'stopsbyline':
                 stopsCreation(config)
@@ -83,9 +88,9 @@ def run():
         eamStopCreation(config)
         update_current(config)
 
-    createLocalFiles(config, csvs)
-    updateItemsByID(enterprise_config, config)
-    updateItemsByID(agol_config, config)
+    # createLocalFiles(config, csvs)
+    # updateItemsByID(enterprise_config, config)
+    # updateItemsByID(agol_config, config)
 
 run()
 

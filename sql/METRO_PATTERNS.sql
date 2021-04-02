@@ -1,14 +1,14 @@
 SELECT
-    ml.signid || ',' ||
-    xp.shape_id || ',' ||
-    '"' || ml.lineabbr  || '"'  || ',' ||
-    '"' || substr(mp.pattern, 0, 2) || '"'  || ',' ||
-    '"' || ml.linename  || '"'  || ',' ||
-    '"' || ML.USERLONG2  || '"'  || ',' ||
-    '"' || to_number(ml.lineabbr)  || '"'  || ',' ||
-    tm.fromlat / power(10,(length(abs(tm.fromlat)))-2) || ',' ||
-    tm.fromlon / power(10,(length(abs(tm.fromlon)))-2) || ',' ||
-    xp.shape_pt_sequence || ',' || ''
+    ml.signid as SignID,
+    xp.shape_id as ShapeID,
+    ml.lineabbr  as RouteAbbr,
+    substr(mp.pattern, 0, 2) as DirName,
+    ml.linename as LineName,
+    ML.USERLONG2  as PubNum,
+    to_number(ml.lineabbr)  as LineNum,
+    tm.fromlat / power(10,(length(abs(tm.fromlat)))-2) as shape_lat,
+    tm.fromlon / power(10,(length(abs(tm.fromlon)))-2) as shape_lon,
+    xp.shape_pt_sequence as shape_pt_sequence
 FROM trapeze.tracemap tm
 INNER JOIN
     (
@@ -53,5 +53,5 @@ INNER JOIN
     ON tm.traceid = xp.traceid
 inner join TRAPEZE.masterpattern mp on mp.patternid = xp.shape_id
 inner join trapeze.masterline ml on ml.lineid = floor(mp.linedirid/10)
-ORDER BY shape_id ASC, shape_pt_sequence ASC;
+ORDER BY shape_id ASC, shape_pt_sequence ASC
 

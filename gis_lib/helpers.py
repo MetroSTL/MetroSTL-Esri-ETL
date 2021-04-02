@@ -4,19 +4,16 @@ import shutil
 import glob
 import shutil
 import csv
+import datetime as dt
 from dotenv import load_dotenv
 
 
-# get the max date from all of the files with the prefix of text
-# the date is everything that happens after text 
-# the greatest date is found and should be that monday's date
-def date(text):
-    for file in glob.glob(text):
-        dates = []
-        dates.append(int(file[-10:-4]))
-    date = str(max(dates))
-    print(f'{text[:-1]} Date: {date}')
-    return date
+# get most recent Monday's data in yymmdd format using datetime functions.
+# monday is the first weekday; remove all weekdays between now and then then to get to monday
+def get_last_monday():
+    now = dt.datetime.now()
+    monday = now - dt.timedelta(days = now.weekday()) 
+    return monday.strftime('%y%m%d') # format and return
 
 # get the current sign from the stops csv export by reading off the first row's signid column
 def current_sign(stops_input_loc):
