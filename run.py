@@ -29,9 +29,9 @@ def run():
     load_dotenv(dotenv_path)    # Function chaining all of the processing of feature classes into one 
     
     # use sql queries to create a folder of this week's system data as csv files
-    create_csv_data()
+    # create_csv_data()
 
-    #  change Current Working directory for processing files
+    #  change Current Working directory to the csv location for csv -> gdb processing
     os.chdir(os.environ['SQL_EXPORTS'])
 
     # turn local variables into object for processing later in function
@@ -44,22 +44,22 @@ def run():
     feature_classes = features(local['sched_date'])
 
     # build agol and enterprise profiles
-    #agol_config = portal_config(feature_classes, 'agol')
-    #enterprise_config = portal_config(feature_classes, 'enterprise')
+    agol_config = portal_config(feature_classes, 'agol')
+    enterprise_config = portal_config(feature_classes, 'enterprise')
     
     # get the location of all of the csv's ---> to be deprecated with airflow
-    #csvs = csv_locs(local['sched_date'])
+    csvs = csv_locs(local['sched_date'])
 
     #printList(csvs, "org_csv")
 
     # delete the working gdb if it has already been run this week
-    #clearDataStore(local['Automation_Exports'], local['sched_date'])
+    clearDataStore(local['Automation_Exports'], local['sched_date'])
 
     # add headers to dba csv exports
-    #csv_dir = add_columns(local['Sql_Exports'], csvs, local['sched_date'])
+    # csv_dir = add_columns(local['Sql_Exports'], csvs, local['sched_date'])
     
     # define config object
-    #config = config_options(csvs, csv_dir, local)
+    config = config_options(csvs, local)
 
  
     # run the model with all of the specified variable objects and profiles
@@ -89,9 +89,9 @@ def run():
         eamStopCreation(config)
         update_current(config)
 
-    # createLocalFiles(config, csvs)
-    # updateItemsByID(enterprise_config, config)
-    # updateItemsByID(agol_config, config)
+    createLocalFiles(config, csvs)
+    updateItemsByID(enterprise_config, config)
+    updateItemsByID(agol_config, config)
 
 run()
 

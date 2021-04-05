@@ -17,6 +17,7 @@ def local_config():
     # This is where the csv's are stored when the DBA's export every monday
     Sql_Exports = os.environ['SQL_Exports']
 
+    # !! assumes that CurrentFiles.gdb exists inside AutomationExports !!
     return {
         "ACS_Year": os.environ['TITLE_VI_GDB'][-6:-4],
         "Automation_Exports": Automation_Exports,
@@ -63,7 +64,7 @@ def portal_config(fc_list, portal):
 
 # returns a combination of config objects that have all of the information to run processing information
 # takes in csv_locs return object, the weekly csv directory from add_columns(), and the local_config() return object
-def config_options(files, csv_dir, local):
+def config_options(files, local):
     ap.env.workspace = os.path.join(local['Automation_Exports'], local['ds_gdb'])
 
     # destructures local object for easy usage in return function
@@ -73,16 +74,15 @@ def config_options(files, csv_dir, local):
     ds_gdb = local['ds_gdb']
     cf_gdb = local['cf_gdb']
     title_vi_gdb = local['TitleVI']
+    sql_exports = local['Sql_Exports']
 
     return {
         "sign": sign,
-        "csv_dir": csv_dir,
         "date": date,
         "acs_year": acs_year,
         "title_vi_gdb": title_vi_gdb,
         "files": files,
-        "org_dir": csv_dir['org_dir'],
-        "processed_dir": csv_dir['processed_dir'],
+        "processed_dir": os.path.join(sql_exports, date),
         "ds_gdb": ds_gdb, 
         "cf_gdb": cf_gdb,
         "files": {
