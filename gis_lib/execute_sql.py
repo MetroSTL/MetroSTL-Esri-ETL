@@ -1,4 +1,4 @@
-from gis_lib.helpers import get_last_monday
+from gis_lib.helpers import deleteFolder, get_last_monday
 import pandas as pd
 import cx_Oracle
 from dotenv import load_dotenv 
@@ -40,16 +40,29 @@ def run_SQL(sql_query):
     return df
 
 
-# run each of the SQL queries, storing the output in the csv location specified by the configg 
+# run each of the SQL queries, storing the output in the csv location specified by the config 
 def create_csv_data():
+
+    # identify the location for this week's system data to go
+    csv_dir = os.path.join(os.getenv('SQL_EXPORTS'), get_last_monday())
+
+    # clear out any existing folder and create a new folder in SQL Exports for the current week's data
+    deleteFolder(csv_dir)
+    os.mkdir(csv_dir)
 
     # iterate through each sql file in the sql folder,
     sql_folder = os.path.join(os.getcwd(),'sql')
     for file in os.listdir(sql_folder):
+
+        # identfy the sql file being ur\\run, and run it
         sql_name = file.replace('.sql','') # just the name of the sql file
         print('running sql:', sql_name,'\n')
         df = run_SQL(os.path.join(sql_folder, file))
-        export_loc = os.path.join(os.getenv('SQL_Exports'), f'{sql_name}{get_last_monday()}.csv')
+        print('finished running ', sql_name)
+
+        # format columns lowercase and export csv to the export location
+        df.columns = [x.lower() for x in df.columns]
+        export_loc = os.path.join(csv_dir, f'{sql_name}{get_last_monday()}.csv')
         print('exporting to ', export_loc,'\n')
         df.to_csv(export_loc, index = False) # TODO: column names from all caps to the appropriate names
 

@@ -15,8 +15,8 @@ SELECT
                 s.stopname  as StopName,
                 s.onstreet  as OnSt,
                 s.atstreet  as AtSt,
-                '"' || lbs.lines || '"'  || ',' || as Lines,
-                '"' || lbs.routes || '"'  || ',' || as Routes
+                lbs.lines as Lines,
+                lbs.routes as Routes,
                 s.stopposition  as StopPos,
                 CASE WHEN s.preferred = 1 THEN 'YES' WHEN s.preferred = 0 THEN 'NO' END  as PrefTrans,
                 CASE WHEN s.bench = 1 THEN 'YES' WHEN s.bench = 0 and s.shelter =1 THEN 'YES' WHEN s.bench = 0 and s.shelter = 0 THEN 'NO' END  as Bench,
@@ -24,7 +24,7 @@ SELECT
                 CASE WHEN s.transfer = 1 THEN 'YES' WHEN s.transfer = 0 THEN 'NO' END  as Transfer,
                 CASE WHEN s.userstring12 = 'A' THEN 'YES' WHEN s.userstring12 != 'A' THEN 'NO' END  as ADA,
                 CASE WHEN s.userlongstring1 = 'A' THEN 'YES' WHEN s.userlongstring1 != 'A' THEN 'NO' END  as PubWay,
-                nvl(CAST(s.countycode AS VARCHAR(30)),'""')   as CountyCode,
+                CAST(s.countycode AS VARCHAR(30)) as CountyCode,
                 s.city  as Juris,
                 s.gpslon / power(10,(length(abs(s.gpslon)))-2)  as GPS_Lon,
                 s.gpslat / power(10,(length(abs(s.gpslat)))-2)  as GPS_Lat

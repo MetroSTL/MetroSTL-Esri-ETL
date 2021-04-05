@@ -28,6 +28,7 @@ def run():
     dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
     load_dotenv(dotenv_path)    # Function chaining all of the processing of feature classes into one 
     
+    # use sql queries to create a folder of this week's system data as csv files
     create_csv_data()
 
     #  change Current Working directory for processing files
@@ -40,16 +41,16 @@ def run():
     ap.env.workspace = os.path.join(local['Automation_Exports'], local['ds_gdb'])
     
     # get feature class names by feeding in date
-    #feature_classes = features(local['sched_date'])
+    feature_classes = features(local['sched_date'])
 
-    # # build agol and enterprise profiles
-    # agol_config = portal_config(feature_classes, 'agol')
-    # enterprise_config = portal_config(feature_classes, 'enterprise')
+    # build agol and enterprise profiles
+    #agol_config = portal_config(feature_classes, 'agol')
+    #enterprise_config = portal_config(feature_classes, 'enterprise')
     
     # get the location of all of the csv's ---> to be deprecated with airflow
-    # csvs = csv_locs(local['sched_date'])
+    #csvs = csv_locs(local['sched_date'])
 
-    printList(csvs, "org_csv")
+    #printList(csvs, "org_csv")
 
     # delete the working gdb if it has already been run this week
     #clearDataStore(local['Automation_Exports'], local['sched_date'])
@@ -58,7 +59,7 @@ def run():
     #csv_dir = add_columns(local['Sql_Exports'], csvs, local['sched_date'])
     
     # define config object
-    config = config_options(csvs, csv_dir, local)
+    #config = config_options(csvs, csv_dir, local)
 
  
     # run the model with all of the specified variable objects and profiles

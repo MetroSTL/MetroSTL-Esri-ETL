@@ -13,3 +13,5 @@ debug.log
 __pycache__
 .idea
 gis_lib/__pycache__
+
+todo.txt
