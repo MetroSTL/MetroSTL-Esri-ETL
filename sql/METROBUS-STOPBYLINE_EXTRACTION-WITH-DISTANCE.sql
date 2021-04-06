@@ -1,44 +1,44 @@
 SELECT
-    ls.Sequence as Seq,
-    linesbystop.signid as SignID,
-    s.stopid as StopID,
-    s.stopabbr as StopAbbr,
-    s.stopname as StopName,
-	s.onstreet as OnSt,
-    s.atstreet as AtSt,
-    s.stopposition as StopPos,
+    ls.Sequence as seq,
+    linesbystop.signid as sign_id,
+    s.stopid as stop_id,
+    s.stopabbr as stop_abbr,
+    s.stopname as stop_name,
+	s.onstreet as on_st,
+    s.atstreet as at_st,
+    s.stopposition as stop_pos,
     CASE WHEN S.PREFERRED = 1 THEN 'YES'
         WHEN S.PREFERRED = 0 THEN 'NO'
-        END as PrefTrans,
+        END as pref_trans,
     CASE WHEN s.bench = 1 THEN 'YES'
         WHEN s.bench = 0 and s.shelter =1
             THEN 'YES'
         WHEN s.bench = 0 and s.shelter = 0
             THEN 'NO'
-        END as Bench,
+        END as bench,
     CASE WHEN s.Shelter = 1 THEN 'YES'
         WHEN s.shelter = 0 THEN 'NO'
-        END as Shelter,
+        END as shelter,
     CASE WHEN s.transfer = 1 THEN 'YES'
         WHEN s.transfer = 0 THEN 'NO'
-        END as Transfer,
+        END as transfer,
     CASE WHEN s.userstring12 = 'A' THEN 'YES'
         WHEN s.userstring12 <> 'A' THEN 'NO'
-        END as ADA,
+        END as ada,
     CASE WHEN s.userlongstring1 = 'A' THEN 'YES'
         WHEN s.userlongstring1 <> 'A' THEN 'NO'
-        END as PubWay,
+        END as pub_way,
     CASE WHEN ls.nodeid > 0 THEN 'YES'
         WHEN ls.nodeid = 0 THEN 'NO'
-        END as Node,
-    ML.LINENAME as LineName,
-    ml.lineabbr as RouteCode,
-	l.directionname as Dir,
-    CAST(S.COUNTYCODE AS VARCHAR(30)) as CountyCode,
-    S.CITY as Juris,
-    s.gpslon / power(10,(length(abs(s.gpslon)))-2) as GPS_Lon,
-    s.gpslat / power(10,(length(abs(s.gpslat)))-2) as GPS_Lat,
-    sp.distance as Dist
+        END as node,
+    ML.LINENAME as line_name,
+    ml.lineabbr as route,
+	l.directionname as dir,
+    CAST(S.COUNTYCODE AS VARCHAR(30)) as county_code,
+    S.CITY as juris,
+    s.gpslon / power(10,(length(abs(s.gpslon)))-2) as gps_lon,
+    s.gpslat / power(10,(length(abs(s.gpslat)))-2) as gps_lat,
+    sp.distance as dist
 FROM linestop ls
 LEFT OUTER JOIN stops s ON s.stopid = ls.stopID
 INNER JOIN line l ON l.linedirid = ls.linedirid AND l.signid = ls.signid

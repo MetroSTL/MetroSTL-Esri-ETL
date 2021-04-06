@@ -29,7 +29,7 @@ def run():
     load_dotenv(dotenv_path)    # Function chaining all of the processing of feature classes into one 
     
     # use sql queries to create a folder of this week's system data as csv files
-    # create_csv_data()
+    create_csv_data()
 
     #  change Current Working directory to the csv location for csv -> gdb processing
     os.chdir(os.environ['SQL_EXPORTS'])

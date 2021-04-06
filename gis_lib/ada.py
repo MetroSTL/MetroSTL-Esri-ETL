@@ -32,7 +32,7 @@ def adaCreation(config):
     deleteFeatureClass(ada_route_buffer, ds_gdb)
 
     # MERGE METROBUS SYSTEM BUFFER WITH LIGHTRAIL ALIGNMENT BUFFER AND 270 FILL IN
-    ap.FeatureClassToFeatureClass_conversion(mb_sys_buffer_loc, ds_gdb, ada_route_buffer, 'ADA = 1')
+    ap.FeatureClassToFeatureClass_conversion(mb_sys_buffer_loc, ds_gdb, ada_route_buffer, 'ada = 1')
     ap.Merge_management([ada_fill, ada_route_buffer, lightrail_buffer_loc], ada_system_merge)
     ap.AddField_management(ada_system_merge, 'Name', 'TEXT')
     ap.CalculateField_management(ada_system_merge, "Name", "'Metro ADA Service Area'", "PYTHON3")

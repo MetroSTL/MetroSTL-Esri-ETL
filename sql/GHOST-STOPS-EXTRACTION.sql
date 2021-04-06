@@ -7,23 +7,23 @@ WITH sgn AS
                 AND TO_NUMBER(TO_CHAR(SYSDATE,'YYYYMMDD')) BETWEEN FromDate AND ToDate
 )
 SELECT
-                (SELECT signid FROM sgn) as SignID,
-                s.stopid as StopID,
-                s.stopabbr as StopAbbr,
-                s.stopname as StopName,
-                s.onstreet as OnSt,
-                s.atstreet as AtSt,
-                s.stopposition  as StopPos,
-                CASE WHEN s.preferred = 1 THEN 'YES' WHEN s.preferred = 0 THEN 'NO' END as PrefTrans,
-                CASE WHEN s.bench = 1 THEN 'YES' WHEN s.bench = 0 and s.shelter =1 THEN 'YES' WHEN s.bench = 0 and s.shelter = 0 THEN 'NO' END  as Bench,
-                CASE WHEN s.Shelter = 1 THEN 'YES' WHEN s.shelter = 0 THEN 'NO' END as Shelter,
+                (SELECT signid FROM sgn) as sign_id,
+                s.stopid as stop_id,
+                s.stopabbr as stop_abbr,
+                s.stopname as stop_name,
+                s.onstreet as on_st,
+                s.atstreet as at_st,
+                s.stopposition  as stop_pos,
+                CASE WHEN s.preferred = 1 THEN 'YES' WHEN s.preferred = 0 THEN 'NO' END as pref_trans,
+                CASE WHEN s.bench = 1 THEN 'YES' WHEN s.bench = 0 and s.shelter =1 THEN 'YES' WHEN s.bench = 0 and s.shelter = 0 THEN 'NO' END  as bench,
+                CASE WHEN s.Shelter = 1 THEN 'YES' WHEN s.shelter = 0 THEN 'NO' END as shelter,
                 CASE WHEN s.transfer = 1 THEN 'YES' WHEN s.transfer = 0 THEN 'NO' END as Transfer,
-                CASE WHEN s.userstring12 = 'A' THEN 'YES' WHEN s.userstring12 != 'A' THEN 'NO' END as ADA,
-                CASE WHEN s.userlongstring1 = 'A' THEN 'YES' WHEN s.userlongstring1 != 'A' THEN 'NO' END as PubWay,
-                CAST(s.countycode AS VARCHAR(30)) as CountyCode,
-                s.city as Juris,
-                s.gpslon / power(10,(length(abs(s.gpslon)))-2) as GPS_Lon,
-                s.gpslat / power(10,(length(abs(s.gpslat)))-2) as GPS_Lat
+                CASE WHEN s.userstring12 = 'A' THEN 'YES' WHEN s.userstring12 != 'A' THEN 'NO' END as ada,
+                CASE WHEN s.userlongstring1 = 'A' THEN 'YES' WHEN s.userlongstring1 != 'A' THEN 'NO' END as pub_way,
+                CAST(s.countycode AS VARCHAR(30)) as county_code,
+                s.city as juris,
+                s.gpslon / power(10,(length(abs(s.gpslon)))-2) as gps_lon,
+                s.gpslat / power(10,(length(abs(s.gpslat)))-2) as gps_lat
 FROM stops s
 FULL JOIN -- Routes and Lines by Stop
 (

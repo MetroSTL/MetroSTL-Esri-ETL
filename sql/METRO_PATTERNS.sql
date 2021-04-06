@@ -1,11 +1,11 @@
 SELECT
-    ml.signid as SignID,
-    xp.shape_id as ShapeID,
-    ml.lineabbr  as RouteAbbr,
-    substr(mp.pattern, 0, 2) as DirName,
-    ml.linename as LineName,
-    ML.USERLONG2  as PubNum,
-    to_number(ml.lineabbr)  as LineNum,
+    ml.signid as sign_id,
+    xp.shape_id as shape_id,
+    ml.lineabbr  as route_abbr,
+    substr(mp.pattern, 0, 2) as dir_name,
+    ml.linename as line_name,
+    ML.USERLONG2  as pub_num,
+    to_number(ml.lineabbr)  as line_num,
     tm.fromlat / power(10,(length(abs(tm.fromlat)))-2) as shape_lat,
     tm.fromlon / power(10,(length(abs(tm.fromlon)))-2) as shape_lon,
     xp.shape_pt_sequence as shape_pt_sequence

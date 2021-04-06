@@ -1,6 +1,6 @@
 select 
 p.polytypeid as type,
-m.lineabbr as route_abbr
+m.lineabbr as ada_abbr
 
 from TRAPEZE.POLYGONS p
 left join trapeze.routepolygonmap rp

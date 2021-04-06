@@ -39,30 +39,30 @@ def routesCreation(config):
     deleteFeatureClass(patterns_line, ds_gdb)
     ap.PointsToLine_management(patterns_xy,
                                patterns_line,
-                               'ShapeID',
+                               'shape_id',
                                'SHAPE_PT_SEQUENCE')
 
     print("Created Line file from Point file")
 
     # ADD IN PATTERNS GROUP ATTRIBUTES TO PATTERNS LINE
     ap.JoinField_management(patterns_line_loc, 
-                            'ShapeID', 
+                            'shape_id', 
                             patterns_table, 
-                            'ShapeID', 
-                            ['RouteAbbr', 'DirName', 'LineName', 'PubNum', 'PubName', 'LineNum'])
+                            'shape_id', 
+                            ['route_abbr', 'dir_name', 'line_name', 'pub_num', 'PubName', 'line_num'])
     print("Added fields to Patterns")
 
     # GET RID OF METROLINK 
-    with ap.da.UpdateCursor(patterns_line_loc, ['ROUTEABBR']) as cursor:
+    with ap.da.UpdateCursor(patterns_line_loc, ['route_abbr']) as cursor:
         for row in cursor:
             if row[0] == 3599:
                 cursor.deleteRow()
 
     # START OF ADDING ADA INFORMATION
-    ap.AddField_management(patterns_line_loc, "ADA", "SHORT")
-    # add in ADAAbbr is the same as RouteAbbr but you cannot add in another field with the same name
+    ap.AddField_management(patterns_line_loc, "ada", "SHORT")
+    # add in ADAAbbr; it's the same as RouteAbbr, but you can't add two fields with the same name
     # if it is not in the ada table that means that it is not an ada route
-    ap.JoinField_management(patterns_line_loc, 'RouteAbbr', ada_table_loc, 'ADAAbbr', ['ADAAbbr'])
+    ap.JoinField_management(patterns_line_loc, 'route_abbr', ada_table_loc, 'ada_abbr', ['ada_abbr'])
 
     # COMPARE ROUTE_ABBR IN ADA ROUTES AND PATTERNS_LINE_LOC
     adaCalc = """def ada(adaRoute):
@@ -71,15 +71,15 @@ def routesCreation(config):
         else:
             return 1"""
 
-    ap.CalculateField_management(patterns_line_loc, 'ADA', 'ada(!ADAAbbr!)', "PYTHON3", adaCalc)
-    ap.DeleteField_management(patterns_line_loc, "ADAAbbr")
+    ap.CalculateField_management(patterns_line_loc, 'ada', 'ada(!ada_abbr!)', "PYTHON3", adaCalc)
+    ap.DeleteField_management(patterns_line_loc, "ada_abbr")
 
     # ROUTES BY DIRECTION CREATION
 
     deleteFeatureClass(routes_dir_line, ds_gdb)
 
     # CREATE ROUTE DIR SHAPEFILE
-    ap.Dissolve_management(patterns_line, routes_dir_line, ['ROUTEABBR', 'LINENAME', 'PUBNUM', 'LINENUM', 'DIRNAME', 'ADA'])
+    ap.Dissolve_management(patterns_line, routes_dir_line, ['route_abbr', 'line_name', 'pub_num', 'line_num', 'dir_name', 'ada'])
     print('Created Routes Dir Lines')
 
     # ROUTES CREATION
@@ -87,7 +87,7 @@ def routesCreation(config):
     deleteFeatureClass(routes_line, ds_gdb)
 
     # CREATE ROUTE SHAPEFILE
-    ap.Dissolve_management(patterns_line, routes_line, ['ROUTEABBR', 'LINENAME', 'PUBNUM', 'LINENUM', 'ADA'])
+    ap.Dissolve_management(patterns_line, routes_line, ['route_abbr', 'line_name', 'pub_num', 'line_num', 'ada'])
     print('Created Routes Lines')
 
 
@@ -139,7 +139,7 @@ def routeBuffers(config):
 
         # PATTERNS GROUP
         patterns_pd = pd.read_csv(patterns_table).groupby(
-            ['RouteAbbr', 'LineName', 'PubNum', 'LineNum', 'ShapeID', 'DirName']).mean()
+            ['route_abbr', 'line_name', 'pub_num', 'line_num', 'shape_id', 'dir_name']).mean()
         patterns_pd.drop(['shape_lat', 'shape_lon', 'shape_pt_sequence'], axis=1)
         print('Unique Routes table created')
 

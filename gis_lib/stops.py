@@ -47,19 +47,19 @@ def stopsCreation(config):
     ap.SpatialJoin_analysis(stops_output, county, stops_state_county)
 
     # STOPS COUNTY CALUCLATION
-    ap.AddField_management(stops_output, "CountyName", "TEXT")
-    ap.JoinField_management(stops_output, "StopID", stops_state_county, "StopID", ["GEOID", "NAME"])
-    ap.CalculateField_management(stops_output, f"CountyCode", '!GEOID!', "PYTHON3")
-    ap.CalculateField_management(stops_output, f"CountyName", '!NAME!', "PYTHON3")
+    ap.AddField_management(stops_output, "county_name", "TEXT")
+    ap.JoinField_management(stops_output, "stop_id", stops_state_county, "stop_id", ["GEOID", "NAME"])
+    ap.CalculateField_management(stops_output, f"county_code", '!GEOID!', "PYTHON3")
+    ap.CalculateField_management(stops_output, f"county_name", '!NAME!', "PYTHON3")
     ap.DeleteField_management(stops_output, "GEOID")
     ap.DeleteField_management(stops_output, "NAME")
 
 
     # STOPS BY LINE COUNTY CALCULATIONS
-    ap.AddField_management(stopsbyline_output, "CountyName", "TEXT")
-    ap.JoinField_management(stopsbyline_output, "StopID", stops_state_county, "StopID", ["GEOID", "NAME"])
-    ap.CalculateField_management(stopsbyline_output, f"CountyCode", '!GEOID!', "PYTHON3")
-    ap.CalculateField_management(stopsbyline_output, f"CountyName", '!NAME!', "PYTHON3")
+    ap.AddField_management(stopsbyline_output, "county_name", "TEXT")
+    ap.JoinField_management(stopsbyline_output, "stop_id", stops_state_county, "stop_id", ["GEOID", "NAME"])
+    ap.CalculateField_management(stopsbyline_output, f"county_code", '!GEOID!', "PYTHON3")
+    ap.CalculateField_management(stopsbyline_output, f"county_name", '!NAME!', "PYTHON3")
     ap.DeleteField_management(stopsbyline_output, "GEOID")
     ap.DeleteField_management(stopsbyline_output, "NAME")
 
@@ -87,7 +87,7 @@ def ghosttopsCreation(config):
     ghoststops_table = os.path.join(csv_dir, f'{ghoststops_name}.csv')
     
     # Turns csv file to geographical file
-    ap.management.XYTableToPoint(ghoststops_table, ghoststops_output,'GPS_LON', 'GPS_LAT', '', ap.SpatialReference(4326))
+    ap.management.XYTableToPoint(ghoststops_table, ghoststops_output,'gps_lon', 'gps_lat', '', ap.SpatialReference(4326))
     print('Stops By Line Created')
     county = os.path.join(cf_gdb, 'State_County')
     stops_state_county = os.path.join(ds_gdb, 'stopsStateCounty')
@@ -98,10 +98,10 @@ def ghosttopsCreation(config):
 
 
     # STOPS COUNTY CALUCLATION
-    ap.AddField_management(ghoststops_output, "CountyName", "TEXT")
-    ap.JoinField_management(ghoststops_output, "StopID", stops_state_county, "StopID", ["GEOID", "NAME"])
-    ap.CalculateField_management(ghoststops_output, f"CountyCode", '!GEOID!', "PYTHON3")
-    ap.CalculateField_management(ghoststops_output, f"CountyName", '!NAME!', "PYTHON3")
+    ap.AddField_management(ghoststops_output, "county_name", "TEXT")
+    ap.JoinField_management(ghoststops_output, "stop_id", stops_state_county, "stop_id", ["GEOID", "NAME"])
+    ap.CalculateField_management(ghoststops_output, f"county_code", '!GEOID!', "PYTHON3")
+    ap.CalculateField_management(ghoststops_output, f"county_name", '!NAME!', "PYTHON3")
     ap.DeleteField_management(ghoststops_output, "GEOID")
     ap.DeleteField_management(ghoststops_output, "NAME")
 
